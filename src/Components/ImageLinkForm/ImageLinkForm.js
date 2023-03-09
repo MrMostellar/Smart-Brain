@@ -4,7 +4,7 @@ import './ImageLinkForm.css';
 const ImageLinkForm = ()=>{
     return(
         <div>
-            <p className="f3 ma4 tc">
+            <p className="f3 ma4 white tc">
                 {"This brain will identify faces in pictures, give it a try!"}
             </p>
             <div className="center">
