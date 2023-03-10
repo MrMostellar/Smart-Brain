@@ -7,6 +7,22 @@ import './App.css';
 import ParticlesBg from 'particles-bg'
 // import FacialRecognition from './FacialRecognition';
 class App extends React.Component{
+    constructor(){
+        super();
+        this.state ={
+            onInputChange: '',
+            onClick: ''
+        }
+    }
+
+    onInputChange = (event) => {
+        console.log(event.target.value);
+    }
+
+    handleClick = () => {
+        console.log("click");
+    }
+
     render(){
         return(
             <>
@@ -14,7 +30,7 @@ class App extends React.Component{
                 <Navigation />
                 <Logo />
                 <Rank />
-                <ImageLinkForm />
+                <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick}/>
                 {/*<FacialRecognition /> */}
             </>
         );
