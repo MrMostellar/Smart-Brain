@@ -5,6 +5,7 @@ import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm';
 import Rank from './Components/Rank/Rank';
 import './App.css';
 import ParticlesBg from 'particles-bg'
+import Clarifai from 'clarifai'
 // import FacialRecognition from './FacialRecognition';
 class App extends React.Component{
     constructor(){
@@ -14,6 +15,10 @@ class App extends React.Component{
             onClick: ''
         }
     }
+
+    app = new Clarifai.App({
+        apiKey: 'a2d08a22717e4cbd82e096018aeabe66'
+       });
 
     onInputChange = (event) => {
         console.log(event.target.value);
