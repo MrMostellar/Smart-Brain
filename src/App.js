@@ -15,6 +15,12 @@ class App extends React.Component{
         }
     }
 
+    handleEnterKey = (event) => {
+        if(event.charCode === 13){
+            this.handleClick();
+        }
+    }
+
     onInputChange = (event) => {
        this.setState({input: event.target.value});
     }
@@ -73,7 +79,9 @@ class App extends React.Component{
                 <Navigation />
                 <Logo />
                 <Rank />
-                <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick}/>
+                <ImageLinkForm onInputChange={this.onInputChange} 
+                onClick={this.handleClick} onKeyDown ={this.handleEnterKey}
+                />
                 <FacialRecognition image={this.state.imageURL} />
             </>
         );
