@@ -109,20 +109,21 @@ class App extends React.Component{
 
 //App Render
     render(){
+        const {route, isSignedIn, imageURL, box} = this.state;
         return(
             <>
                 <div className='max'>
                     <ParticlesBg type="lines" bg={true} />
                 </div>
-                <Navigation onRouteChange= {this.onRouteChange} isSignedIn={this.state.isSignedIn}/>
-                { this.state.route === 'Home' 
+                <Navigation onRouteChange= {this.onRouteChange} isSignedIn={isSignedIn}/>
+                {route === 'Home' 
                     ?
                     <>
                         <Rank />
                         <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick} onKeyDown = {this.handleKeyDown}/>
-                        <FacialRecognition box ={this.state.box} image={this.state.imageURL} />
+                        <FacialRecognition box ={box} image={imageURL} />
                     </>
-                    :(this.state.route === 'SignIn'
+                    :(route === 'SignIn'
                         ?<LogIn onRouteChange={this.onRouteChange} />
                         :<>
                             <SignUp onRouteChange={this.onRouteChange} />
