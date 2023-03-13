@@ -1,5 +1,4 @@
 import React from "react";
-// import SignUp from "../SignUp/SignUp";
 
 const LogIn = ({onRouteChange}) => {
 
@@ -23,7 +22,7 @@ const LogIn = ({onRouteChange}) => {
                                 <input onClick={()=>onRouteChange('Home')} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in"/>
                             </div>
                             <div className="lh-copy mt3">
-                                <p onClick={()=>onRouteChange('SignUp')} className="f6 link dim black db">Sign up</p>
+                                <p onClick={()=>onRouteChange('SignUp')} className="f6 link dim black db pointer">Sign up</p>
                             </div>
                         </form>
                     </main>

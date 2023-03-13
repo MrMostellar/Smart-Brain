@@ -6,7 +6,7 @@ import Rank from './Components/Rank/Rank';
 import './App.css';
 import ParticlesBg from 'particles-bg';
 import FacialRecognition from './Components/Facial Recognition/FacialRecognition';
-import LogIn from './Components/LogIn/LogIn';
+import LogIn from './Components/SignIn/SignIn';
 import SignUp from './Components/SignUp/SignUp';
 class App extends React.Component{
     constructor(){
@@ -15,12 +15,20 @@ class App extends React.Component{
             input: '',
             imageURL: '',
             box: {},
-            route: 'LogIn'
+            route: 'SignIn',
+            isSignedIn: false
         }
     }
 
+
     onRouteChange = (route)=> {
         this.setState({route: route});
+
+        if(route === 'SignIn'){
+            this.setState({isSignedIn: false});
+        } else if(route === 'Home'){
+            this.setState({isSignedIn: true});
+        }
     }
     
     calculateFaceLocation(data){
@@ -105,7 +113,7 @@ class App extends React.Component{
                 <div className='max'>
                     <ParticlesBg type="lines" bg={true} />
                 </div>
-                <Navigation onRouteChange= {this.onRouteChange}/>
+                <Navigation onRouteChange= {this.onRouteChange} isSignedIn={this.state.isSignedIn}/>
                 { this.state.route === 'Home' 
                     ?
                     <>
@@ -114,7 +122,7 @@ class App extends React.Component{
                         <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick} onKeyDown = {this.handleKeyDown}/>
                         <FacialRecognition box ={this.state.box} image={this.state.imageURL} />
                     </>
-                    :(this.state.route === 'LogIn'
+                    :(this.state.route === 'SignIn'
                         ?<LogIn onRouteChange={this.onRouteChange} />
                         :<>
                             <SignUp onRouteChange={this.onRouteChange} />
