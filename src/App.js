@@ -11,12 +11,29 @@ class App extends React.Component{
         super();
         this.state ={
             input: '',
-            imageURL: ''
+            imageURL: '',
+            box: {},
         }
     }
 
-    handleEnterKey = (event) => {
-        if(event.charCode === 13){
+    calculateFaceLocation(data){
+        const image = document.getElementById("imageInput");
+        const width = Number(image.width);
+        const height = Number(image.height);
+        return{
+            leftCol: data.left_col * width,
+            topRow: data.top_row * height,
+            rightCol: width - (data.right_col * width),
+            bottomRow: height - (data.bottom_row * height)
+        }
+    }
+
+    displayFaceBox(box){
+        this.setState({box: box});
+    }
+
+    handleKeyDown = (event) => {
+        if(event.keyCode === 13){
             this.handleClick();
         }
     }
@@ -67,22 +84,25 @@ class App extends React.Component{
         };
     
         fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
+            .then(response => response.json())
+            .then(result => { 
+                const border = result.outputs[0].data.regions[0].region_info.bounding_box;
+                return this.displayFaceBox(this.calculateFaceLocation(border));
+            })
             .catch(error => console.log('error', error));
     }
 
     render(){
         return(
             <>
-                <ParticlesBg type="lines" bg={true} />
+                <div className='max'>
+                    <ParticlesBg type="lines" bg={true} />
+                </div>
                 <Navigation />
                 <Logo />
                 <Rank />
-                <ImageLinkForm onInputChange={this.onInputChange} 
-                onClick={this.handleClick} onKeyDown ={this.handleEnterKey}
-                />
-                <FacialRecognition image={this.state.imageURL} />
+                <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick} onKeyDown = {this.handleKeyDown}/>
+                <FacialRecognition box ={this.state.box} image={this.state.imageURL} />
             </>
         );
     }

@@ -1,10 +1,11 @@
 body {
   margin: 0;
+  min-height: fit-content;
+  height: 100%;
   font-family: 'Roboto Condensed', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: rgb(2,0,36);
-background: linear-gradient(90deg, rgba(2,0,36,.8) 0%, rgba(9,9,121,.8) 88%, rgba(8,46,140,.8) 100%, rgba(6,172,205,.8) 100%);
+  background: linear-gradient(90deg, rgba(2,0,36,.8) 0%, rgba(9,9,121,.8) 88%, rgba(8,46,140,.8) 100%, rgba(6,172,205,.8) 100%);
 }
 
 code {
