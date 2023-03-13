@@ -6,6 +6,8 @@ import Rank from './Components/Rank/Rank';
 import './App.css';
 import ParticlesBg from 'particles-bg';
 import FacialRecognition from './Components/Facial Recognition/FacialRecognition';
+import LogIn from './Components/LogIn/LogIn';
+import SignUp from './Components/SignUp/SignUp';
 class App extends React.Component{
     constructor(){
         super();
@@ -13,9 +15,14 @@ class App extends React.Component{
             input: '',
             imageURL: '',
             box: {},
+            route: 'LogIn'
         }
     }
 
+    onRouteChange = (route)=> {
+        this.setState({route: route});
+    }
+    
     calculateFaceLocation(data){
         const image = document.getElementById("imageInput");
         const width = Number(image.width);
@@ -98,11 +105,23 @@ class App extends React.Component{
                 <div className='max'>
                     <ParticlesBg type="lines" bg={true} />
                 </div>
-                <Navigation />
-                <Logo />
-                <Rank />
-                <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick} onKeyDown = {this.handleKeyDown}/>
-                <FacialRecognition box ={this.state.box} image={this.state.imageURL} />
+                <Navigation onRouteChange= {this.onRouteChange}/>
+                { this.state.route === 'Home' 
+                    ?
+                    <>
+                        <Logo />
+                        <Rank />
+                        <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick} onKeyDown = {this.handleKeyDown}/>
+                        <FacialRecognition box ={this.state.box} image={this.state.imageURL} />
+                    </>
+                    :(this.state.route === 'LogIn'
+                        ?<LogIn onRouteChange={this.onRouteChange} />
+                        :<>
+                            <SignUp onRouteChange={this.onRouteChange} />
+                        </>
+                    )
+                    
+                }
             </>
         );
     }
