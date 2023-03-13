@@ -20,7 +20,7 @@ class App extends React.Component{
         }
     }
 
-
+// Page Routing
     onRouteChange = (route)=> {
         this.setState({route: route});
 
@@ -30,7 +30,7 @@ class App extends React.Component{
             this.setState({isSignedIn: true});
         }
     }
-    
+// API Usage
     calculateFaceLocation(data){
         const image = document.getElementById("imageInput");
         const width = Number(image.width);
@@ -47,6 +47,52 @@ class App extends React.Component{
         this.setState({box: box});
     }
 
+    imageSubmit = () => {
+        // Your PAT (Personal Access Token) can be found in the portal under Authentification
+        const PAT = '1be12b20d7574e88b1de317e782e7353';
+        // Specify the correct user_id/app_id pairings
+        // Since you're making inferences outside your app's scope
+        const USER_ID = 'mostellar';       
+        const APP_ID = 'SmartBrain';
+        // Change these to whatever model and image URL you want to use
+        const MODEL_ID = 'face-detection';
+        const MODEL_VERSION_ID = '6dc7e46bc9124c5c8824be4822abe105';    
+        const IMAGE_URL = this.state.input;
+            const raw = JSON.stringify({
+                "user_app_id": {
+                    "user_id": USER_ID,
+                    "app_id": APP_ID
+                },
+                "inputs": [
+                    {
+                        "data": {
+                            "image": {
+                                "url": IMAGE_URL
+                            }
+                        }
+                    }
+                ]
+            });
+        
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Key ' + PAT
+                },
+                body: raw
+            };
+        
+            fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
+                .then(response => response.json())
+                .then(result => { 
+                    const border = result.outputs[0].data.regions[0].region_info.bounding_box;
+                    return this.displayFaceBox(this.calculateFaceLocation(border));
+                })
+                .catch(error => console.log('error', error));
+        }
+
+// Event Handlers
     handleKeyDown = (event) => {
         if(event.keyCode === 13){
             this.handleClick();
@@ -62,51 +108,7 @@ class App extends React.Component{
         this.imageSubmit();
     }
 
-    imageSubmit = () => {
-    // Your PAT (Personal Access Token) can be found in the portal under Authentification
-    const PAT = '1be12b20d7574e88b1de317e782e7353';
-    // Specify the correct user_id/app_id pairings
-    // Since you're making inferences outside your app's scope
-    const USER_ID = 'mostellar';       
-    const APP_ID = 'SmartBrain';
-    // Change these to whatever model and image URL you want to use
-    const MODEL_ID = 'face-detection';
-    const MODEL_VERSION_ID = '6dc7e46bc9124c5c8824be4822abe105';    
-    const IMAGE_URL = this.state.input;
-        const raw = JSON.stringify({
-            "user_app_id": {
-                "user_id": USER_ID,
-                "app_id": APP_ID
-            },
-            "inputs": [
-                {
-                    "data": {
-                        "image": {
-                            "url": IMAGE_URL
-                        }
-                    }
-                }
-            ]
-        });
-    
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Key ' + PAT
-            },
-            body: raw
-        };
-    
-        fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
-            .then(response => response.json())
-            .then(result => { 
-                const border = result.outputs[0].data.regions[0].region_info.bounding_box;
-                return this.displayFaceBox(this.calculateFaceLocation(border));
-            })
-            .catch(error => console.log('error', error));
-    }
-
+//App Render
     render(){
         return(
             <>
