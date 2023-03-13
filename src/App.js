@@ -1,6 +1,5 @@
 import React from 'react';
 import Navigation from './Components/Navigation/Navigation';
-import Logo from './Components/Logo/Logo';
 import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm';
 import Rank from './Components/Rank/Rank';
 import './App.css';
@@ -119,7 +118,6 @@ class App extends React.Component{
                 { this.state.route === 'Home' 
                     ?
                     <>
-                        <Logo />
                         <Rank />
                         <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick} onKeyDown = {this.handleKeyDown}/>
                         <FacialRecognition box ={this.state.box} image={this.state.imageURL} />
