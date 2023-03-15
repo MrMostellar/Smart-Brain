@@ -1,7 +1,46 @@
 import React from "react";
 
-const LogIn = ({onRouteChange}) => {
+class LogIn extends React.Component{
+    
+    constructor(props){
+        super(props);
+        this.state ={
+            SignInEmail: '',
+            SignInPassword: '',
+            LoginFailed: false
+        }
+    }
 
+    handleEmailChange = (event) =>{
+        this.setState({SignInEmail: event.target.value});
+    }
+
+    handlePasswordChange = (event) =>{
+        this.setState({SignInPassword: event.target.value});
+    }
+
+    onSubmit = () =>{
+        fetch('http://localhost:3000/signin', {
+            method: 'post',
+            headers:{'Content-type': 'application/json'},
+            body: JSON.stringify({
+                email: this.state.SignInEmail,
+                password: this.state.SignInPassword
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+                if(data === 'success'){
+                    this.props.onRouteChange('Home');
+                } else{
+                    this.setState({LoginFailed: data});
+                }
+            })
+        
+    }
+    
+    render(){
+        const {onRouteChange} = this.props;
         return(
             <>
                 <article className="br3 ba dark-gray bg-white b--black-10 mv4 w-100 w-50-m w-25-l mw center">
@@ -11,18 +50,37 @@ const LogIn = ({onRouteChange}) => {
                                 <legend className="f4 fw6 ph0 mh0">Sign In</legend>
                                 <div className="mt3">
                                     <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                                    <input className="pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black w-100" type="email" name="email-address"  id="email-address"/>
+                                    <input 
+                                    className="pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black w-100" 
+                                    type="email" 
+                                    name="email-address"  
+                                    id="email-address"
+                                    onChange={this.handleEmailChange}
+                                />
                                 </div>
                                 <div className="mv3">
                                     <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                                    <input className="b pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black w-100" type="password" name="password"  id="password"/>
+                                    <input className="b pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black w-100" 
+                                    type="password" 
+                                    name="password"  
+                                    id="password"
+                                    onChange= {this.handlePasswordChange}
+                                />
                                 </div>
                             </fieldset>
                             <div className="">
-                                <input onClick={()=>onRouteChange('Home')} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in"/>
+                                <input 
+                                onClick={this.onSubmit} 
+                                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
+                                type="submit" 
+                                value="Sign in"
+                            />
+                            </div>
+                            <div className="center red f6">
+                                <p className="flex-wrap">{this.state.LoginFailed}</p>
                             </div>
                             <div className="lh-copy mt3">
-                                <p onClick={()=>onRouteChange('SignUp')} className="f6 link dim black db pointer">Sign up</p>
+                                <p onClick={() =>onRouteChange('SignUp')} className="f6 link dim black db pointer">Sign up</p>
                             </div>
                         </div>
                     </main>
@@ -32,5 +90,5 @@ const LogIn = ({onRouteChange}) => {
 
         );
     }
-
+}
 export default LogIn;

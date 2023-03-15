@@ -10,19 +10,19 @@ const SignUp = ({onRouteChange}) =>{
                             <legend className="f4 fw6 ph0 mh0">Sign Up</legend>
                             <div className="mt3">
                                 <label className="db fw6 lh-copy f6" htmlFor="email-address">Name</label>
-                                <input className="pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black w-100" type="name" name="name"  id="name"/>
+                                <input className="pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black" type="name" name="name"  id="name"/>
                             </div>
-                            <div className="mt3">
+                            <div className="mv3">
                                 <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                                <input className="pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black w-100" type="email" name="email-address"  id="email-address"/>
+                                <input className="pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black" type="email" name="email-address"  id="email-address"/>
                             </div>
                             <div className="mv3">
                                 <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                                <input className="b pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black w-100" type="password" name="password"  id="password"/>
+                                <input className="b pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black" type="password" name="password"  id="password"/>
                             </div>
                             <div className="mv3">
                                 <label className="db fw6 lh-copy f6" htmlFor="password">Confirm Password</label>
-                                <input className="b pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black w-100" type="confirmPassword" name="confirmPassword"  id="confirmPassword"/>
+                                <input className="b pa2 input-reset ba bg-transparent hover-bg-light-gray hover-black" type="confirmPassword" name="confirmPassword"  id="confirmPassword"/>
                             </div>
                             <div>
                                 {/* Add Google reCaptcha here later */}
