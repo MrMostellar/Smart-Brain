@@ -1,6 +1,6 @@
 import React from "react";
 
-class LogIn extends React.Component{
+class SignIn extends React.Component{
     
     constructor(props){
         super(props);
@@ -29,11 +29,12 @@ class LogIn extends React.Component{
             })
         })
         .then(response => response.json())
-        .then(data => {
-                if(data === 'success'){
+        .then(user => {
+                if(user.id){
+                    this.props.loadUser(user);
                     this.props.onRouteChange('Home');
                 } else{
-                    this.setState({LoginFailed: data});
+                    this.setState({LoginFailed: 'Login failed..'});
                 }
             })
         
@@ -91,4 +92,4 @@ class LogIn extends React.Component{
         );
     }
 }
-export default LogIn;
+export default SignIn;

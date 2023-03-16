@@ -5,7 +5,7 @@ import Rank from './Components/Rank/Rank';
 import './App.css';
 import ParticlesBg from 'particles-bg';
 import FacialRecognition from './Components/Facial Recognition/FacialRecognition';
-import LogIn from './Components/SignIn/SignIn';
+import SignIn from './Components/SignIn/SignIn';
 import SignUp from './Components/SignUp/SignUp';
 class App extends React.Component{
     constructor(){
@@ -15,8 +15,29 @@ class App extends React.Component{
             imageURL: '',
             box: {},
             route: 'SignIn',
-            isSignedIn: false
+            isSignedIn: false,
+            user:{
+                id: '',
+                name: '',
+                email: '',
+                entries: 0,
+                joined: ''
+            }
         }
+    }
+
+// Loading Users
+
+    loadUser = (data)=> {
+        this.setState({
+            user:{
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                entries: data.entries,
+                joined: data.joined
+            }
+        });
     }
 
 // Page Routing
@@ -85,10 +106,25 @@ class App extends React.Component{
             fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
                 .then(response => response.json())
                 .then(result => { 
+                    if(result){
+                        fetch('http://localhost:3000/image', {
+                            method: 'put',
+                            headers:{'Content-type': 'application/json'},
+                            body: JSON.stringify({
+                                id: this.state.user.id,
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(count =>{
+                            this.setState(Object.assign(this.state.user, {entries: count}));
+                        })
+                    }
                     const border = result.outputs[0].data.regions[0].region_info.bounding_box;
                     return this.displayFaceBox(this.calculateFaceLocation(border));
                 })
-                .catch(error => console.log('error', error));
+                .catch(error => {
+                    console.log(error);
+                });
         }
 
 // Event Handlers
@@ -110,6 +146,7 @@ class App extends React.Component{
 //App Render
     render(){
         const {route, isSignedIn, imageURL, box} = this.state;
+        const {name, entries} = this.state.user;
         return(
             <>
                 <div className='max'>
@@ -119,14 +156,14 @@ class App extends React.Component{
                 {route === 'Home' 
                     ?
                     <>
-                        <Rank />
+                        <Rank name={name} entries={entries} />
                         <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick} onKeyDown = {this.handleKeyDown}/>
-                        <FacialRecognition box ={box} image={imageURL} />
+                        <FacialRecognition box={box} image={imageURL} />
                     </>
                     :(route === 'SignIn'
-                        ?<LogIn onRouteChange={this.onRouteChange} />
+                        ?<SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
                         :<>
-                            <SignUp onRouteChange={this.onRouteChange} />
+                            <SignUp loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
                         </>
                     )
                     
