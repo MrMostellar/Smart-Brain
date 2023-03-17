@@ -8,6 +8,7 @@ class SignUp extends React.Component{
             SignUpEmail: '',
             SignUpPassword: '',
             ConfirmPassword: '',
+            FormError: ''
         }
     }
 
@@ -28,23 +29,37 @@ handleConfirmPasswordChange = (event) =>{
 }
 
 onSubmit = () =>{
-        fetch('http://localhost:3000/signup', {
-            method: 'post',
-            headers: {'Content-type': 'application/json'},
-            body: JSON.stringify({
-                name: this.state.SignUpName,
-                email: this.state.SignUpEmail,
-                password: this.state.SignUpPassword
+    const {SignUpEmail, SignUpName, SignUpPassword, ConfirmPassword} = this.state;
+        if(!SignUpEmail || !SignUpName || !SignUpPassword || !ConfirmPassword){
+            this.setState({FormError: 'Cannot submit blank..'});
+        } else if(SignUpPassword !== ConfirmPassword){
+            this.setState({FormError: 'Passwords dont match..'});
+        } else if(!this.state.SignUpEmail.includes('@')){
+            this.setState({FormError: 'Invalid Email'});
+        } else{
+            this.setState({FormError: ''});
+            fetch('http://localhost:3000/signup', {
+                method: 'post',
+                headers: {'Content-type': 'application/json'},
+                body: JSON.stringify({
+                    name: this.state.SignUpName,
+                    email: this.state.SignUpEmail,
+                    password: this.state.SignUpPassword
+                })
             })
-        })
-        .then(response => response.json())
-        .then(user =>{
-            if(user){
-                this.props.loadUser(user);
-                this.props.onRouteChange('Home');
-            }
-        });
-        
+            .then(response => response.json())
+            .then(user =>{
+                if(user !== 'user exists'){
+                    this.props.loadUser(user);
+                    this.props.onRouteChange('Home');
+                } else{
+                    this.setState({FormError: 'User with that email already exists..'});
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }          
 }
 
     render(){
@@ -95,12 +110,12 @@ onSubmit = () =>{
                                     onChange={this.handleConfirmPasswordChange}
                                 />
                                 </div>
-                                <div>
-                                    {/* Add Google reCaptcha here later */}
-                                </div>
                             </fieldset>
                             <div className="">
                                 <input onClick={this.onSubmit} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign up"/>
+                            </div>
+                            <div>
+                                <p className="center red f5">{this.state.FormError}</p>
                             </div>
                         </div>
                     </main>

@@ -7,7 +7,7 @@ class SignIn extends React.Component{
         this.state ={
             SignInEmail: '',
             SignInPassword: '',
-            LoginFailed: false
+            LoginFailed: ''
         }
     }
 
@@ -20,24 +20,28 @@ class SignIn extends React.Component{
     }
 
     onSubmit = () =>{
-        fetch('http://localhost:3000/signin', {
-            method: 'post',
-            headers:{'Content-type': 'application/json'},
-            body: JSON.stringify({
-                email: this.state.SignInEmail,
-                password: this.state.SignInPassword
+        const {SignInEmail, SignInPassword} = this.state;
+        if(!SignInEmail || !SignInPassword){
+            this.setState({LoginFailed: 'Please enter your email/password..'});
+        } else{
+            fetch('http://localhost:3000/signin', {
+                method: 'post',
+                headers:{'Content-type': 'application/json'},
+                body: JSON.stringify({
+                    email: this.state.SignInEmail,
+                    password: this.state.SignInPassword
+                })
             })
-        })
-        .then(response => response.json())
-        .then(user => {
-                if(user.id){
-                    this.props.loadUser(user);
-                    this.props.onRouteChange('Home');
-                } else{
-                    this.setState({LoginFailed: 'Login failed..'});
-                }
-            })
-        
+            .then(response => response.json())
+            .then(user => {
+                    if(user.id){
+                        this.props.loadUser(user);
+                        this.props.onRouteChange('Home');
+                    } else{
+                        this.setState({LoginFailed: 'Incorrect email/password combination'});
+                    }
+                })
+        }
     }
     
     render(){
