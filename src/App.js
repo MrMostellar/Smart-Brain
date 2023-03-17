@@ -1,29 +1,33 @@
 import React from 'react';
 import Navigation from './Components/Navigation/Navigation';
 import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm';
+import ImageLinkFormError from './Components/ImageLinkForm/ImageLinkFormError'
 import Rank from './Components/Rank/Rank';
 import './App.css';
 import ParticlesBg from 'particles-bg';
 import FacialRecognition from './Components/Facial Recognition/FacialRecognition';
 import SignIn from './Components/SignIn/SignIn';
 import SignUp from './Components/SignUp/SignUp';
+
+const initialState ={
+    input: '',
+    imageURL: '',
+    box: {},
+    route: 'SignIn',
+    isSignedIn: false,
+    InvalidURL:'',
+    user:{
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+    }
+}
 class App extends React.Component{
     constructor(){
         super();
-        this.state ={
-            input: '',
-            imageURL: '',
-            box: {},
-            route: 'SignIn',
-            isSignedIn: false,
-            user:{
-                id: '',
-                name: '',
-                email: '',
-                entries: 0,
-                joined: ''
-            }
-        }
+        this.state = initialState;
     }
 
 // Loading Users
@@ -45,7 +49,7 @@ class App extends React.Component{
         this.setState({route: route});
 
         if(route === 'SignIn'){
-            this.setState({isSignedIn: false});
+            this.setState(initialState);
         } else if(route === 'Home'){
             this.setState({isSignedIn: true});
         }
@@ -106,7 +110,8 @@ class App extends React.Component{
             fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
                 .then(response => response.json())
                 .then(result => { 
-                    if(result){
+                    const data = Object.values(result.outputs[0].data).length;
+                    if(data !== 0){
                         fetch('http://localhost:3000/image', {
                             method: 'put',
                             headers:{'Content-type': 'application/json'},
@@ -118,9 +123,16 @@ class App extends React.Component{
                         .then(count =>{
                             this.setState(Object.assign(this.state.user, {entries: count}));
                         })
+                        this.setState({
+                            InvalidURL: ''
+                        });
+                    } else{
+                        this.setState({
+                            InvalidURL: 'Invalid entry'
+                        });
                     }
-                    const border = result.outputs[0].data.regions[0].region_info.bounding_box;
-                    return this.displayFaceBox(this.calculateFaceLocation(border));
+                    this.displayFaceBox(this.calculateFaceLocation(result.outputs[0].data.regions[0].region_info.bounding_box));
+                    
                 })
                 .catch(error => {
                     console.log(error);
@@ -158,6 +170,7 @@ class App extends React.Component{
                     <>
                         <Rank name={name} entries={entries} />
                         <ImageLinkForm onInputChange={this.onInputChange} onClick={this.handleClick} onKeyDown = {this.handleKeyDown}/>
+                        <ImageLinkFormError error={this.state.InvalidURL} />
                         <FacialRecognition box={box} image={imageURL} />
                     </>
                     :(route === 'SignIn'
