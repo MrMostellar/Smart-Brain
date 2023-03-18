@@ -40,7 +40,10 @@ class SignIn extends React.Component{
                     } else{
                         this.setState({LoginFailed: 'Incorrect email/password combination'});
                     }
-                })
+            })
+            .catch(err => {
+                console.log(err);
+            })
         }
     }
     
