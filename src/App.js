@@ -105,9 +105,6 @@ class App extends React.Component{
                     this.displayFaceBox(this.calculateFaceLocation(result.outputs[0].data.regions[0].region_info.bounding_box));
                     
                 })
-                .catch(error => {
-                    console.log(error);
-                });
         }
 
 // Event Handlers
