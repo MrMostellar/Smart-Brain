@@ -12,7 +12,7 @@ import SignUp from './Components/SignUp/SignUp';
 const initialState ={
     input: '',
     imageURL: '',
-    box: {},
+    box: [],
     route: 'SignIn',
     isSignedIn: false,
     InvalidURL:'',
@@ -59,12 +59,14 @@ class App extends React.Component{
         const image = document.getElementById("imageInput");
         const width = Number(image.width);
         const height = Number(image.height);
-        return{
-            leftCol: data.left_col * width,
-            topRow: data.top_row * height,
-            rightCol: width - (data.right_col * width),
-            bottomRow: height - (data.bottom_row * height)
-        }
+        return data.map((face) => {
+            return{
+            leftCol: face.left_col * width,
+            topRow: face.top_row * height,
+            rightCol: width - (face.right_col * width),
+            bottomRow: height - (face.bottom_row * height)
+            }
+        })
     }
 
     displayFaceBox(box){
@@ -72,7 +74,7 @@ class App extends React.Component{
     }
 
     imageSubmit = () => {
-                fetch('http://localhost:3000/imageUrl', {
+                fetch('https://smart-brain-api-bce7.onrender.com/imageUrl', {
                     method: 'post',
                     headers:{'Content-type': 'application/json'},
                     body: JSON.stringify({
@@ -83,7 +85,7 @@ class App extends React.Component{
                 .then(result => { 
                     const data = Object.values(result.outputs[0].data).length;
                     if(data !== 0){
-                        fetch('http://localhost:3000/image', {
+                        fetch('https://smart-brain-api-bce7.onrender.com/image', {
                             method: 'put',
                             headers:{'Content-type': 'application/json'},
                             body: JSON.stringify({
@@ -102,8 +104,11 @@ class App extends React.Component{
                             InvalidURL: 'Invalid entry'
                         });
                     }
-                    this.displayFaceBox(this.calculateFaceLocation(result.outputs[0].data.regions[0].region_info.bounding_box));
-                    
+                    let faces = result.outputs[0].data.regions;
+                    // [0].region_info.bounding_box;
+                    this.displayFaceBox(this.calculateFaceLocation(faces.map((face) => {
+                            return face.region_info.bounding_box;
+                        })));      
                 })
         }
 
