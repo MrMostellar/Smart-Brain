@@ -72,7 +72,7 @@ class App extends React.Component{
     }
 
     imageSubmit = () => {
-                fetch('https://smart-brain-api-bce7.onrender.com/imageUrl', {
+                fetch('http://localhost:3000/imageUrl', {
                     method: 'post',
                     headers:{'Content-type': 'application/json'},
                     body: JSON.stringify({
@@ -83,7 +83,7 @@ class App extends React.Component{
                 .then(result => { 
                     const data = Object.values(result.outputs[0].data).length;
                     if(data !== 0){
-                        fetch('https://smart-brain-api-bce7.onrender.com/image', {
+                        fetch('http://localhost:3000/image', {
                             method: 'put',
                             headers:{'Content-type': 'application/json'},
                             body: JSON.stringify({

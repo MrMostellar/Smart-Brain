@@ -38,7 +38,7 @@ onSubmit = () =>{
             this.setState({FormError: 'Invalid Email'});
         } else{
             this.setState({FormError: ''});
-            fetch('https://smart-brain-api-bce7.onrender.com/signup', {
+            fetch('http://localhost:3000/signup', {
                 method: 'post',
                 headers: {'Content-type': 'application/json'},
                 body: JSON.stringify({
